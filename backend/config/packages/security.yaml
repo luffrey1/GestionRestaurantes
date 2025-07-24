@@ -1,0 +1,21 @@
+security:
+    providers:
+        api_key_user:
+            memory:
+                users:
+                    api-user: { password: '', roles: 'ROLE_API' }
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        api:
+            pattern: ^/api/
+            stateless: true
+            provider: api_key_user
+            custom_authenticators:
+                - App\Security\ApiKeyAuthenticator
+    access_control:
+        - { path: ^/api/health, roles: PUBLIC_ACCESS }
+        - { path: ^/api/doc, roles: PUBLIC_ACCESS }
+        - { path: ^/api/doc.json, roles: PUBLIC_ACCESS }
+        - { path: ^/api/, roles: ROLE_API } 

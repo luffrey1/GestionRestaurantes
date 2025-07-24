@@ -1,0 +1,53 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: symfony_app
+    working_dir: /var/www/html
+    volumes:
+      - ./backend:/var/www/html
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - postgres
+    networks:
+      - symfony
+    command: >
+      sh -c "php bin/console doctrine:migrations:migrate --no-interaction && php-fpm"
+
+  postgres:
+    image: postgres:16
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: restaurantes_lo16
+      POSTGRES_USER: restaurantes_lo16_user
+      POSTGRES_PASSWORD: u8WLp6vzqDCXEhzWUux0zff4p7deOQzB
+    ports:
+      - "15432:15432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - symfony
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx_server
+    ports:
+      - "80:80"
+    volumes:
+      - ./backend:/var/www/html
+      - ./nginx/default.local.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - symfony
+
+volumes:
+  db_data:
+
+networks:
+  symfony:
+    driver: bridge
+

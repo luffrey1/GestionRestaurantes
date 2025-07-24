@@ -1,0 +1,15 @@
+{
+    "require-dev": {
+        "symfony/maker-bundle": "^1.64"
+    },
+    "require": {
+        "symfony/twig-bundle": "^7.3",
+        "symfony/asset": "^7.3",
+        "symfony/runtime": "^7.3"
+    },
+    "config": {
+        "allow-plugins": {
+            "symfony/runtime": true
+        }
+    }
+}
